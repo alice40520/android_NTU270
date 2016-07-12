@@ -14,7 +14,10 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         android:id="@+id/textView"
-        android:layout_alignParentEnd="false" />
+        android:layout_alignParentEnd="false"
+        android:textColor="#ffcccc"
+        android:textStyle="normal|bold|italic"
+        android:textSize="55dp" />
 
     <Button
         android:layout_width="match_parent"
