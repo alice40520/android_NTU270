@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.user.simpleui.MainActivity">
+    tools:context="com.example.user.simpleui.MainActivity"
+    android:textAlignment="center">
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,12 +21,54 @@
         android:textSize="55dp" />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/button"
-        android:layout_below="@+id/textView"
+        android:enabled="true"
+        android:clickable="true"
+        android:onClick="submit"
+        android:background="@drawable/button"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioGroup" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textView" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/radioGroup"
+        android:layout_below="@+id/input"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="male"
+            android:id="@+id/maleRadioButton"
+            android:checked="true"
+            android:padding="5dp"
+            android:layout_margin="10dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="female"
+            android:id="@+id/femaleRadioButton"
+            android:checked="false"
+            android:padding="5dp"
+            android:layout_margin="10dp" />
+    </RadioGroup>
 
 </RelativeLayout>
