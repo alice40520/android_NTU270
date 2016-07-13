@@ -12,16 +12,20 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     EditText editText;
-    String existingOrder = "Your orders are:";
     RadioGroup radioGroup;
     ListView listView;
     Spinner spinner;
 
-    String order = "Bubble Tea";
+    String selectedDrink = "Bubble Tea";
+
+    List<order> orders = new ArrayList<>(); // to create container for order
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
-                order = radioButton.getText().toString();
+                selectedDrink = radioButton.getText().toString();
             }
         });
 
@@ -59,18 +63,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submit(View view){
-        existingOrder = existingOrder + "\n" + " " + order;
-        textView.setText(existingOrder); // input output
-    }
 
-    public void clear(View view){
-        textView.setText("");
-        existingOrder = "";
+        String text = editText.getText().toString();
+
+        textView.setText(text); // input output
+
+        order newOrder = new order();
+        newOrder.note = text;
+        newOrder.drinkName = selectedDrink;
+        newOrder.storeInfo = (String)spinner.getSelectedItem();
+
+        orders.add(newOrder);
     }
 
     public void setUpListView(){
-        String[] data = new String[] {"black tea", "green tea", "milk tea with pearl", "Taro milk tea", "double chocolaty frappuccino", "S'mores frappuccino"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+
+        OrderAdapter adapter = new OrderAdapter(this, orders);
         listView.setAdapter(adapter);
     }
 
