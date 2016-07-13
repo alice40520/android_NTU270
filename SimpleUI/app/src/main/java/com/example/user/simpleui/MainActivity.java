@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     String selectedDrink = "Bubble Tea";
 
-    List<order> orders = new ArrayList<>(); // to create container for order
+    List<Order> orders = new ArrayList<>(); // to create container for order
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
         String text = editText.getText().toString();
 
-        textView.setText(text); // input output
+       //textView.setText(text); // input output
 
-        order newOrder = new order();
-        newOrder.note = text;
-        newOrder.drinkName = selectedDrink;
-        newOrder.storeInfo = (String)spinner.getSelectedItem();
+        Order order = new Order();
+        order.note = text;
+        order.drinkName = selectedDrink;
+        order.storeInfo = (String)spinner.getSelectedItem();
 
-        orders.add(newOrder);
+        orders.add(order);
+
+        setUpListView();
+
+        editText.setText("");
     }
 
     public void setUpListView(){

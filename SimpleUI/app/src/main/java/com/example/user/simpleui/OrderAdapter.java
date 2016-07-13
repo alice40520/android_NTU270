@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class OrderAdapter extends BaseAdapter{
 
-    List<order> orders;
+    List<Order> orders;
     LayoutInflater layoutInflater;
 
-    public OrderAdapter(Context context, List<order> orders){
+    public OrderAdapter(Context context, List<Order> orders){
         this.orders = orders;
         this.layoutInflater = LayoutInflater.from(context);
     }
@@ -40,19 +40,37 @@ public class OrderAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        Holder holder;
+
         if(convertView == null){
             convertView = layoutInflater.inflate(R.layout.list_order_item, null);
+
+            TextView noteTextView = (TextView)convertView.findViewById(R.id.noteTextView);
+            TextView storeInfoTextView = (TextView)convertView.findViewById(R.id.storeTextView);
+            TextView drinkTextView = (TextView)convertView.findViewById(R.id.drinkNameTextView);
+
+            holder = new Holder();
+            holder.drinkNameTextView = drinkTextView;
+            holder.noteTextView = noteTextView;
+            holder.storeInfoTextView = storeInfoTextView;
+
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (Holder)convertView.getTag();
         }
 
-        TextView noteTextView = (TextView)convertView.findViewById(R.id.noteTextView);
-        TextView storeInfoTextView = (TextView)convertView.findViewById(R.id.storeTextView);
-        TextView drinkTextView = (TextView)convertView.findViewById(R.id.drinkNameTextView);
-
-        order order = orders.get(position);
-        noteTextView.setText(order.note);
-        storeInfoTextView.setText(order.storeInfo);
-        drinkTextView.setText(order.drinkName);
+        Order order = orders.get(position);
+        holder.noteTextView.setText(order.note);
+        holder.storeInfoTextView.setText(order.storeInfo);
+        holder.drinkNameTextView.setText(order.drinkName);
 
         return convertView;
+    }
+
+    class Holder{
+        TextView drinkNameTextView;
+        TextView noteTextView;
+        TextView storeInfoTextView;
     }
 }
