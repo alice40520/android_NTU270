@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="storeInfo">
+        <item> NY Store </item>
+        <item> LA Store </item>
+        <item> Boston Store </item>
+        <item> Vancouver Store </item>
+        <item> Toronto Store </item>
+        <item> Montreal Store </item>
+    </string-array>
+</resources>
