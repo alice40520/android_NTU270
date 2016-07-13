@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -12,10 +13,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     EditText editText;
-    String existingInput = "";
+    String existingOrder = "Your orders are:";
     RadioGroup radioGroup;
 
-    String sex = "男";
+    String order = "Bubble Tea";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     submit(v);
                     return true;
                 }
@@ -41,22 +42,19 @@ public class MainActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.maleRadioButton){
-                    sex = "男";
-                }
-                else if(checkedId == R.id.femaleRadioButton){
-                    sex = "女";
-                }
+                RadioButton radioButton = (RadioButton)group.findViewById(checkedId);
+                order = radioButton.getText().toString();
             }
         });
     }
 
     public void submit(View view){
-        String input = editText.getText().toString();
-        existingInput = existingInput + "\n" + input + " " + sex;
-        textView.setText(existingInput); // input output
+        existingOrder = existingOrder + "\n" + " " + order;
+        textView.setText(existingOrder); // input output
+    }
 
-        editText.setText("");
-
+    public void clear(View view){
+        textView.setText("");
+        existingOrder = "";
     }
 }
