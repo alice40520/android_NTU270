@@ -13,10 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/drinkMenuListView"
-        android:layout_above="@+id/returnButton"
-        android:layout_alignRight="@+id/returnButton"
-        android:layout_alignEnd="@+id/returnButton"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/totalTextView" />
 
     <TextView
         android:layout_width="wrap_content"

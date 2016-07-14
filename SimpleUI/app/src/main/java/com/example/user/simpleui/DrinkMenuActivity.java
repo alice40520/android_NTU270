@@ -32,6 +32,8 @@ public class DrinkMenuActivity extends AppCompatActivity {
         totalTextView = (TextView)findViewById(R.id.totalTextView);
         priceTextView = (TextView)findViewById(R.id.priceTextView);
         drinkMenuListView = (ListView)findViewById(R.id.drinkMenuListView);
+
+        setUpDrinkMenuListView();
     }
 
     private void setData(){
@@ -43,6 +45,11 @@ public class DrinkMenuActivity extends AppCompatActivity {
             drink.imageId = imageId[i];
             drinks.add(drink);
         }
+    }
+
+    private void setUpDrinkMenuListView(){
+        DrinkAdapter adapter = new DrinkAdapter(this, drinks);
+        drinkMenuListView.setAdapter(adapter);
     }
 
     @Override

@@ -37,6 +37,12 @@ public class OrderAdapter extends BaseAdapter{
         return position;
     }
 
+    class Holder{
+        TextView drinkNameTextView;
+        TextView noteTextView;
+        TextView storeInfoTextView;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -66,11 +72,5 @@ public class OrderAdapter extends BaseAdapter{
         holder.drinkNameTextView.setText(order.drinkName);
 
         return convertView;
-    }
-
-    class Holder{
-        TextView drinkNameTextView;
-        TextView noteTextView;
-        TextView storeInfoTextView;
     }
 }
