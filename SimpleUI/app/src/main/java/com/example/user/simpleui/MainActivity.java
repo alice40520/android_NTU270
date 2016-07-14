@@ -2,6 +2,7 @@ package com.example.user.simpleui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpListView();
         setUpSpinner();
+
+        Log.d("Debug", "MainActivity OnCreate");
     }
 
     public void submit(View view){
@@ -78,6 +81,42 @@ public class MainActivity extends AppCompatActivity {
         setUpListView();
 
         editText.setText("");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Debug", "MainActivity OnStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Debug", "MainActivity OnResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Debug", "MainActivity OnPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Debug", "MainActivity OnStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Debug", "MainActivity OnDestroy");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("Debug", "MainActivity OnRestart");
     }
 
     public void setUpListView(){
