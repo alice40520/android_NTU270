@@ -1,11 +1,20 @@
 package com.example.user.simpleui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +30,7 @@ public class DrinkMenuActivity extends AppCompatActivity {
     int[] imageId = {R.drawable.drink1, R.drawable.drink2, R.drawable.drink3, R.drawable.drink4};
 
     List<Drink> drinks = new ArrayList<>();
+    List<Drink> orders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,50 @@ public class DrinkMenuActivity extends AppCompatActivity {
     private void setUpDrinkMenuListView(){
         DrinkAdapter adapter = new DrinkAdapter(this, drinks);
         drinkMenuListView.setAdapter(adapter);
+
+        drinkMenuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DrinkAdapter drinkAdapter = (DrinkAdapter)parent.getAdapter();
+                Drink drink = (Drink)drinkAdapter.getItem(position);
+                orders.add(drink);
+                updateTotal();
+            }
+        });
+    }
+
+    public void updateTotal(){
+        int total = 0;
+        for(Drink drink: orders){
+            total = total + drink.mPrice;
+        }
+        priceTextView.setText(String.valueOf(total));
+    }
+
+    public void done(View view){
+        Intent intent = new Intent();
+
+        JSONArray jsonArray = new JSONArray();
+
+        for(Drink drink : orders){
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = drink.getJsonObject();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(jsonObject);
+        }
+
+        intent.putExtra("results", jsonArray.toString());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void cancel(View view){
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        finish();
     }
 
     @Override

@@ -38,14 +38,25 @@
         android:layout_alignTop="@+id/totalTextView"
         android:layout_toRightOf="@+id/totalTextView"
         android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false" />
+        android:layout_alignParentRight="false"
+        android:layout_marginLeft="10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Return"
-        android:id="@+id/returnButton"
+        android:text="DONE"
+        android:id="@+id/doneButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="done"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:id="@+id/cancelButton"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/doneButton"
+        android:onClick="cancel"/>
 </RelativeLayout>

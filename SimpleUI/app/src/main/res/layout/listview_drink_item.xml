@@ -37,7 +37,9 @@
         android:id="@+id/mPriceTextView"
         android:layout_below="@+id/drinkNameTextView"
         android:layout_toRightOf="@+id/unchange1"
-        android:layout_toEndOf="@+id/unchange1" />
+        android:layout_toEndOf="@+id/unchange1"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="false" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,7 +47,8 @@
         android:text="L"
         android:id="@+id/unchange2"
         android:layout_alignTop="@+id/mPriceTextView"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/mPriceTextView"
+        android:layout_toEndOf="@+id/mPriceTextView"
         android:layout_marginRight="10dp"/>
 
     <TextView
