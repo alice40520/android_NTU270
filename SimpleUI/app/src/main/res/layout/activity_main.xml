@@ -38,7 +38,8 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/radioGroup"
         android:layout_below="@+id/input"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -84,5 +85,14 @@
         android:id="@+id/menu"
         android:layout_below="@+id/button"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Menu"
+        android:id="@+id/menuButton"
+        android:layout_above="@+id/menu"
+        android:layout_centerHorizontal="true"
+        android:onClick="goToMenu" />
 
 </RelativeLayout>

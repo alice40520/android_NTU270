@@ -1,5 +1,6 @@
 package com.example.user.simpleui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,24 +66,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debug", "MainActivity OnCreate");
     }
 
-    public void submit(View view){
-
-        String text = editText.getText().toString();
-
-       //textView.setText(text); // input output
-
-        Order order = new Order();
-        order.note = text;
-        order.drinkName = selectedDrink;
-        order.storeInfo = (String)spinner.getSelectedItem();
-
-        orders.add(order);
-
-        setUpListView();
-
-        editText.setText("");
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -129,5 +112,29 @@ public class MainActivity extends AppCompatActivity {
         String[] data = getResources().getStringArray(R.array.storeInfo);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, data);
         spinner.setAdapter(adapter);
+    }
+
+    public void submit(View view){
+
+        String text = editText.getText().toString();
+
+        //textView.setText(text); // input output
+
+        Order order = new Order();
+        order.note = text;
+        order.drinkName = selectedDrink;
+        order.storeInfo = (String)spinner.getSelectedItem();
+
+        orders.add(order);
+
+        setUpListView();
+
+        editText.setText("");
+    }
+
+    public void goToMenu(View view){
+        Intent intent = new Intent();
+        intent.setClass(this, DrinkMenuActivity.class);
+        startActivity(intent);
     }
 }
