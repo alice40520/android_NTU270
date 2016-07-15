@@ -19,10 +19,24 @@ public class Drink {
         try {
             jsonObject.put("name", drinkNmae);
             jsonObject.put("Price", mPrice);
+            jsonObject.put("lPrice", lPrice);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
        return jsonObject;
+    }
+
+    public static Drink newInstanceFromData(String data){
+        Drink drink = new Drink();
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            drink.drinkNmae = jsonObject.getString("name");
+            drink.mPrice = jsonObject.getInt("mPrice");
+            drink.lPrice = jsonObject.getInt("lPrice");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return drink;
     }
 }
