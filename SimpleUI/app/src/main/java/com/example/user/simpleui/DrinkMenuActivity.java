@@ -33,7 +33,7 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
     int[] imageId = {R.drawable.drink1, R.drawable.drink2, R.drawable.drink3, R.drawable.drink4};
 
     List<Drink> drinks = new ArrayList<>();
-    List<Drink> orders = new ArrayList<>();
+    List<DrinkOrder> orders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +92,8 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
 
     public void updateTotal(){
         int total = 0;
-        for(Drink drink: orders){
-            total = total + drink.mPrice;
+        for(DrinkOrder order: orders){
+            total = total + order.mNumber * order.drink.mPrice + order.lNumber * order.drink.lPrice;
         }
         priceTextView.setText(String.valueOf(total));
     }
@@ -103,14 +103,9 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
 
         JSONArray jsonArray = new JSONArray();
 
-        for(Drink drink : orders){
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = drink.getJsonObject();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            jsonArray.put(jsonObject);
+        for(DrinkOrder order : orders){
+            String data = order.toData();
+            jsonArray.put(data);
         }
 
         intent.putExtra("results", jsonArray.toString());
@@ -161,7 +156,20 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
     }
 
     @Override
-    public void onDrinkOrderFinish() {
+    public void onDrinkOrderFinish(DrinkOrder drinkOrder) {
+        Boolean flag = false;
+        for(int i = 0; i < orders.size(); i++){
+            if(orders.get(i).drink.drinkNmae.equals(drinkOrder.drink.drinkNmae)){
+                orders.set(i, drinkOrder);
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            orders.add(drinkOrder);
+        }
 
+        updateTotal();
+        orders.add(drinkOrder);
     }
 }

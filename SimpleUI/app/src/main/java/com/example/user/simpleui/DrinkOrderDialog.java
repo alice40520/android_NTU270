@@ -56,7 +56,10 @@ public class DrinkOrderDialog extends DialogFragment {
         if(getArguments() != null){
             Bundle bundle = getArguments();
             String data = bundle.getString(ARG_PARAM1);
-
+            DrinkOrder drinkOrder = DrinkOrder.newInstanceWithData(data);
+            if(drinkOrder == null){
+                throw new RuntimeException("fail to retrieve DrinkOrder instance from data");
+            }
         }
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -125,6 +128,6 @@ public class DrinkOrderDialog extends DialogFragment {
      */
     public interface OnDrinkOrderListener {
         // TODO: Update argument type and name
-        void onDrinkOrderFinish();
+        void onDrinkOrderFinish(DrinkOrder drinkOrder);
     }
 }
