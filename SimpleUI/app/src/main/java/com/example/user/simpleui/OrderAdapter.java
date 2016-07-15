@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class OrderAdapter extends BaseAdapter{
 
-    List<Order> orders;
+    List<order> orders;
     LayoutInflater layoutInflater;
 
-    public OrderAdapter(Context context, List<Order> orders){
+    public OrderAdapter(Context context, List<order> orders){
         this.orders = orders;
         this.layoutInflater = LayoutInflater.from(context);
     }
@@ -66,7 +66,7 @@ public class OrderAdapter extends BaseAdapter{
             holder = (Holder)convertView.getTag();
         }
 
-        Order order = orders.get(position);
+        order order = orders.get(position);
         holder.noteTextView.setText(order.note);
         holder.storeInfoTextView.setText(order.storeInfo);
         holder.drinkNameTextView.setText(order.drinkName);

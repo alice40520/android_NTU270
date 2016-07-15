@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     String selectedDrink = "Bubble Tea";
 
-    List<Order> orders = new ArrayList<>(); // to create container for order
+    List<order> orders = new ArrayList<>(); // to create container for order
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUpListView(){
-
         OrderAdapter adapter = new OrderAdapter(this, orders);
         listView.setAdapter(adapter);
     }
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         //textView.setText(text); // input output
 
-        Order order = new Order();
+        order order = new order();
         order.note = text;
         order.drinkName = selectedDrink;
         order.storeInfo = (String)spinner.getSelectedItem();
