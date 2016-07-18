@@ -1,6 +1,7 @@
 package com.example.user.simpleui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     String selectedDrink = "Bubble Tea";
 
+    String menuResults = "";
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     List<order> orders = new ArrayList<>(); // to create container for order
 
     @Override
@@ -42,11 +48,17 @@ public class MainActivity extends AppCompatActivity {
         radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         listView = (ListView)findViewById(R.id.menu);
         spinner = (Spinner)findViewById(R.id.spinner);
+        sharedPreferences = getSharedPreferences("setting", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
+        editText.setText(sharedPreferences.getString("editText", ""));
 
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String text = editText.getText().toString();
+                editor.putString("editText", text);
+                editor.commit();
                 if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     submit(v);
                     return true;
@@ -124,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         order order = new order();
         order.note = text;
-        order.drinkName = selectedDrink;
+        order.menuResult = menuResults;
         order.storeInfo = (String)spinner.getSelectedItem();
 
         orders.add(order);
@@ -132,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         setUpListView();
 
         editText.setText("");
+        menuResults = "";
     }
 
     public void goToMenu(View view){
@@ -147,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_DRINK_MENU_ACTIVITY){
             if(resultCode == RESULT_OK){
                 Toast.makeText(this, "訂購成功", Toast.LENGTH_SHORT).show();
-                textView.setText(data.getStringExtra("results"));
+                menuResults = data.getStringExtra("results");
             }
             if(resultCode == RESULT_CANCELED){
                 Toast.makeText(this, "訂購取消", Toast.LENGTH_SHORT).show();
