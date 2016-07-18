@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -67,6 +68,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//HOMEWORK: Set spinner to previously selected value (due 07-21)
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //spinner.setSelection();
+
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -75,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        String history = Utils.readFile(this, "history");
+        String[] datas = history.split("\n");
+        for(String data : datas){
+            order order = order.newInstanceWithData(data);
+            if(order != null){
+                orders.add(order);
+            }
+        }
         setUpListView();
         setUpSpinner();
 
@@ -138,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         order.note = text;
         order.menuResult = menuResults;
         order.storeInfo = (String)spinner.getSelectedItem();
+
+        Utils.writeFile(this, "history", order.toData() + "\n");
 
         orders.add(order);
 

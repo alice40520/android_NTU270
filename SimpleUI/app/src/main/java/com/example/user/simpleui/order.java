@@ -30,4 +30,31 @@ public class order {
         }
         return 0;
     }
+
+    public String toData(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("note", note);
+            jsonObject.put("menuResult", menuResult);
+            jsonObject.put("storeInfo", storeInfo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    public static order newInstanceWithData(String data){
+
+        order order = new order();
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            order.note = jsonObject.getString("note");
+            order.note = jsonObject.getString("menuResult");
+            order.note = jsonObject.getString("storeInfo");
+            return order;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
