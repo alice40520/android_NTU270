@@ -7,10 +7,15 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 
 /**
@@ -27,9 +32,17 @@ public class DrinkOrderDialog extends DialogFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+/*    // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+    private String mParam2; */
+
+    NumberPicker mNumberPicker;
+    NumberPicker lNumberPicker;
+    RadioGroup iceRadioGroup;
+    RadioGroup sugarRadioGroup;
+    EditText noteEditText;
+
+    private DrinkOrder drinkOrder;
 
     private OnDrinkOrderListener mListener;
 
@@ -56,7 +69,7 @@ public class DrinkOrderDialog extends DialogFragment {
         if(getArguments() != null){
             Bundle bundle = getArguments();
             String data = bundle.getString(ARG_PARAM1);
-            DrinkOrder drinkOrder = DrinkOrder.newInstanceWithData(data);
+            drinkOrder = DrinkOrder.newInstanceWithData(data);
             if(drinkOrder == null){
                 throw new RuntimeException("fail to retrieve DrinkOrder instance from data");
             }
@@ -67,11 +80,19 @@ public class DrinkOrderDialog extends DialogFragment {
         View contentView = getActivity().getLayoutInflater().inflate(R.layout.fragment_drink_order_dialog, null);
 
         alertDialogBuilder.setView(contentView)
-                .setTitle("Hello Dialog")
+                .setTitle(drinkOrder.drink.drinkNmae)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        drinkOrder.mNumber = mNumberPicker.getValue();
+                        drinkOrder.lNumber = lNumberPicker.getValue();
+                        drinkOrder.note = noteEditText.getText().toString();
+                        drinkOrder.ice = selectedValue(iceRadioGroup);
+                        drinkOrder.sugar = selectedValue(sugarRadioGroup);
 
+                        if(mListener != null){
+                            mListener.onDrinkOrderFinish(drinkOrder);
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -80,7 +101,28 @@ public class DrinkOrderDialog extends DialogFragment {
 
                     }
                 });
+
+        mNumberPicker = (NumberPicker)contentView.findViewById(R.id.mNumberPicker);
+        mNumberPicker.setMaxValue(100);
+        mNumberPicker.setMinValue(0);
+        mNumberPicker.setValue(drinkOrder.mNumber);
+
+        lNumberPicker = (NumberPicker)contentView.findViewById(R.id.lNumberPicker);
+        lNumberPicker.setMaxValue(100);
+        lNumberPicker.setMinValue(0);
+        lNumberPicker.setValue(drinkOrder.lNumber);
+
+        iceRadioGroup = (RadioGroup)contentView.findViewById(R.id.iceRadioGroup);
+        sugarRadioGroup = (RadioGroup)contentView.findViewById(R.id.sugarRadioGroup);
+        noteEditText = (EditText)contentView.findViewById(R.id.noteEditText);
+
         return alertDialogBuilder.create();
+    }
+
+    private String selectedValue(RadioGroup radioGroup){
+        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+        RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(checkedRadioButtonId);
+        return checkedRadioButton.getText().toString();
     }
 
     //    @Override
