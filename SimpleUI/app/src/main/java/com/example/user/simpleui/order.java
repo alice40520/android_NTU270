@@ -90,6 +90,9 @@ public class order extends ParseObject {
                 if(e == null){
                     order.pinAllInBackground("order", objects);
                 }
+                else{
+                    order.getQuery().fromLocalDatastore().findInBackground(callback);
+                }
                 callback.done(objects, e);
             }
         });

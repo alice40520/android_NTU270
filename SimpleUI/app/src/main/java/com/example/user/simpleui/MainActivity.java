@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -47,17 +51,22 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     List<order> orders = new ArrayList<>(); // to create container for order
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView)findViewById(R.id.textView);
-        editText = (EditText)findViewById(R.id.input);
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
-        listView = (ListView)findViewById(R.id.menu);
-        spinner = (Spinner)findViewById(R.id.spinner);
+        textView = (TextView) findViewById(R.id.textView);
+        editText = (EditText) findViewById(R.id.input);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        listView = (ListView) findViewById(R.id.menu);
+        spinner = (Spinner) findViewById(R.id.spinner);
         sharedPreferences = getSharedPreferences("setting", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -69,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 String text = editText.getText().toString();
                 editor.putString("editText", text);
                 editor.commit();
-                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     submit(v);
                     return true;
                 }
@@ -103,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
 
         String history = Utils.readFile(this, "history");
         String[] datas = history.split("\n");
-        for(String data : datas){
+        for (String data : datas) {
             order order = null;
             order = order.newInstanceWithData(data);
-            if(order != null){
+            if (order != null) {
                 orders.add(order);
             }
         }
@@ -126,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if(e == null){
-                    for(ParseObject object : objects){
+                if (e == null) {
+                    for (ParseObject object : objects) {
                         Toast.makeText(MainActivity.this, object.getString("foo"), Toast.LENGTH_LONG).show(); // shows item in "foo"
                     }
                 }
@@ -135,12 +144,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Log.d("Debug", "MainActivity OnCreate");
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
         Log.d("Debug", "MainActivity OnStart");
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.user.simpleui/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
@@ -158,7 +186,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.user.simpleui/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
         Log.d("Debug", "MainActivity OnStop");
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
     @Override
@@ -173,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debug", "MainActivity OnRestart");
     }
 
-    public void setUpListView(){
+    public void setUpListView() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
         FindCallback<order> callback = new FindCallback<order>() {
             @Override
             public void done(List<order> objects, ParseException e) {
-                if(e == null){
+                if (e == null) {
                     orders = objects;
                     OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
                     listView.setAdapter(adapter);
@@ -188,10 +232,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if(networkInfo == null || !networkInfo.isConnected()){
+        if (networkInfo == null || !networkInfo.isConnected()) {
             order.getQuery().fromLocalDatastore().findInBackground(callback);
-        }
-        else{
+        } else {
             order.getOrdersFromRemote(callback);
         }
 
@@ -205,13 +248,13 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    public void setUpSpinner(){
+    public void setUpSpinner() {
         String[] data = getResources().getStringArray(R.array.storeInfo);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, data);
         spinner.setAdapter(adapter);
     }
 
-    public void submit(View view){
+    public void submit(View view) {
 
         String text = editText.getText().toString();
 
@@ -235,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
         menuResults = "";
     }
 
-    public void goToMenu(View view){
+    public void goToMenu(View view) {
         Intent intent = new Intent();
         intent.setClass(this, DrinkMenuActivity.class);
         startActivityForResult(intent, REQUEST_CODE_DRINK_MENU_ACTIVITY);
@@ -245,12 +288,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_DRINK_MENU_ACTIVITY){
-            if(resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE_DRINK_MENU_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "訂購成功", Toast.LENGTH_SHORT).show();
                 menuResults = data.getStringExtra("results");
             }
-            if(resultCode == RESULT_CANCELED){
+            if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "訂購取消", Toast.LENGTH_SHORT).show();
             }
         }
