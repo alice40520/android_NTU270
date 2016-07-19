@@ -17,6 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,13 +101,35 @@ public class MainActivity extends AppCompatActivity {
         String history = Utils.readFile(this, "history");
         String[] datas = history.split("\n");
         for(String data : datas){
-            order order = order.newInstanceWithData(data);
+            order order = null;
+            order = order.newInstanceWithData(data);
             if(order != null){
                 orders.add(order);
             }
         }
         setUpListView();
         setUpSpinner();
+
+        ParseObject parseObject = new ParseObject("Test"); //class name to the parse object
+        parseObject.put("foo", "bar");
+        parseObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                Toast.makeText(MainActivity.this, "上傳成功", Toast.LENGTH_LONG);
+            }
+        });
+
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Test");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null){
+                    for(ParseObject object : objects){
+                        Toast.makeText(MainActivity.this, object.getString("foo"), Toast.LENGTH_LONG).show(); // shows item in "foo"
+                    }
+                }
+            }
+        });
 
         Log.d("Debug", "MainActivity OnCreate");
     }
