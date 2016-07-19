@@ -4,12 +4,15 @@ import android.widget.RatingBar;
 
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by user on 2016/7/14.
@@ -80,8 +83,16 @@ public class order extends ParseObject {
         return  ParseQuery.getQuery(order.class);
     }
 
-    public static void getOrdersFromRemote(FindCallback<order> callback){
-        getQuery().findInBackground(callback);
+    public static void getOrdersFromRemote(final FindCallback<order> callback){
+        getQuery().findInBackground(new FindCallback<order>() {
+            @Override
+            public void done(List<order> objects, ParseException e) {
+                if(e == null){
+                    order.pinAllInBackground("order", objects);
+                }
+                callback.done(objects, e);
+            }
+        });
     }
 
     public String toData(){

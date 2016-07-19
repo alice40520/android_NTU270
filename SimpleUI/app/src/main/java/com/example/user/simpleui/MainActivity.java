@@ -1,7 +1,10 @@
 package com.example.user.simpleui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -171,14 +174,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUpListView(){
-        order.getOrdersFromRemote(new FindCallback<order>() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        FindCallback<order> callback = new FindCallback<order>() {
             @Override
             public void done(List<order> objects, ParseException e) {
-                orders = objects;
-                OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
-                listView.setAdapter(adapter);
+                if(e == null){
+                    orders = objects;
+                    OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
+                    listView.setAdapter(adapter);
+                }
             }
-        });
+        };
+
+        if(networkInfo == null || !networkInfo.isConnected()){
+            order.getQuery().fromLocalDatastore().findInBackground(callback);
+        }
+        else{
+            order.getOrdersFromRemote(callback);
+        }
+
+//        order.getOrdersFromRemote(new FindCallback<order>() {
+//            @Override
+//            public void done(List<order> objects, ParseException e) {
+//                orders = objects;
+//                OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
+//                listView.setAdapter(adapter);
+//            }
+//        });
     }
 
     public void setUpSpinner(){
@@ -197,7 +221,9 @@ public class MainActivity extends AppCompatActivity {
         order.setNote(text);
         order.setMenuResult(menuResults);
         order.setStoreInfo((String) spinner.getSelectedItem());
-        order.saveInBackground();
+
+        order.pinInBackground("order"); // allows data to be saved on the local device when offline
+        order.saveEventually();
 
         Utils.writeFile(this, "history", order.toData() + "\n");
 
