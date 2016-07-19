@@ -188,9 +188,10 @@ public class MainActivity extends AppCompatActivity {
         //textView.setText(text); // input output
 
         order order = new order();
-        order.note = text;
-        order.menuResult = menuResults;
-        order.storeInfo = (String)spinner.getSelectedItem();
+        order.setNote(text);
+        order.setMenuResult(menuResults);
+        order.setStoreInfo((String)spinner.getSelectedItem());
+        order.saveInBackground();
 
         Utils.writeFile(this, "history", order.toData() + "\n");
 
