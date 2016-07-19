@@ -1,7 +1,11 @@
 package com.example.user.simpleui;
 
+import android.widget.RatingBar;
+
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +74,14 @@ public class order extends ParseObject {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static ParseQuery<order> getQuery(){
+        return  ParseQuery.getQuery(order.class);
+    }
+
+    public static void getOrdersFromRemote(FindCallback<order> callback){
+        getQuery().findInBackground(callback);
     }
 
     public String toData(){

@@ -171,8 +171,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUpListView(){
-        OrderAdapter adapter = new OrderAdapter(this, orders);
-        listView.setAdapter(adapter);
+        order.getOrdersFromRemote(new FindCallback<order>() {
+            @Override
+            public void done(List<order> objects, ParseException e) {
+                orders = objects;
+                OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
+                listView.setAdapter(adapter);
+            }
+        });
     }
 
     public void setUpSpinner(){
@@ -190,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         order order = new order();
         order.setNote(text);
         order.setMenuResult(menuResults);
-        order.setStoreInfo((String)spinner.getSelectedItem());
+        order.setStoreInfo((String) spinner.getSelectedItem());
         order.saveInBackground();
 
         Utils.writeFile(this, "history", order.toData() + "\n");
