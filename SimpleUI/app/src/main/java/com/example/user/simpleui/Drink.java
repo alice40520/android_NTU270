@@ -1,5 +1,6 @@
 package com.example.user.simpleui;
 
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
@@ -10,6 +11,7 @@ import com.parse.ParseQuery;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.interfaces.DSAKey;
 import java.util.List;
 
 /**
@@ -86,8 +88,19 @@ public class Drink extends ParseObject {
     public static void syncDrinksFromRemote(final FindCallback<Drink> callback){
         Drink.getquery().findInBackground(new FindCallback<Drink>() {
             @Override
-            public void done(List<Drink> objects, ParseException e) {
+            public void done(final List<Drink> objects, ParseException e) {
                 if(e == null){
+                    Drink.unpinAllInBackground("Drink", new DeleteCallback() { // deleting all information saved in local device to make sure the information is synchronized
+                        @Override
+                        public void done(ParseException e) {
+                            if(e == null){
+                                Drink.pinAllInBackground("Drink", objects);
+                            }
+                            else{
+                                Drink.getquery().fromLocalDatastore().findInBackground(callback);
+                            }
+                        }
+                    });
                     callback.done(objects, e);
                 }
             }
