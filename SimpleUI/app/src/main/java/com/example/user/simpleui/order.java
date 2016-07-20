@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,6 +80,28 @@ public class order extends ParseObject {
         return 0;
     }
 
+    public static List<String> getMenuResultList(String menuResults){
+        if(menuResults == null || menuResults.equals("")){
+            return null;
+        }
+        try {
+            JSONArray jsonArray = new JSONArray(menuResults);
+            List<String> menuResultList = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++){
+                String data = jsonArray.getString(i);
+                DrinkOrder drinkOrder = DrinkOrder.newInstanceWithData(data);
+                String menuResult = drinkOrder.drink.getDrinkName()
+                        + ";  中杯:" + String.valueOf(drinkOrder.mNumber)
+                        + ";  大杯:" + String.valueOf(drinkOrder.lNumber);
+                menuResultList.add(menuResult);
+            }
+            return menuResultList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ParseQuery<order> getQuery(){
         return  ParseQuery.getQuery(order.class);
     }
@@ -89,6 +112,7 @@ public class order extends ParseObject {
             public void done(List<order> objects, ParseException e) {
                 if(e == null){
                     order.pinAllInBackground("order", objects);
+                    callback.done(objects, e);
                 }
                 else{
                     order.getQuery().fromLocalDatastore().findInBackground(callback);

@@ -119,6 +119,15 @@ public class MainActivity extends AppCompatActivity {
                 orders.add(order);
             }
         }
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                order order = (order)parent.getAdapter().getItem(position);
+                goToDetail(order);
+            }
+        });
+
         setUpListView();
         setUpSpinner();
 
@@ -266,13 +275,16 @@ public class MainActivity extends AppCompatActivity {
         order.setStoreInfo((String) spinner.getSelectedItem());
 
         order.pinInBackground("order"); // allows data to be saved on the local device when offline
-        order.saveEventually();
+        order.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                setUpListView();
+            }
+        });
 
         Utils.writeFile(this, "history", order.toData() + "\n");
 
         orders.add(order);
-
-        setUpListView();
 
         editText.setText("");
         menuResults = "";
@@ -282,6 +294,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(this, DrinkMenuActivity.class);
         startActivityForResult(intent, REQUEST_CODE_DRINK_MENU_ACTIVITY);
+    }
+
+    public void goToDetail(order order){
+        Intent intent = new Intent();
+        intent.setClass(this, OrderDetailActivity.class);
+        intent.putExtra("note", order.getNote());
+        intent.putExtra("storeInfo", order.getStoreInfo());
+        intent.putExtra("menuResult", order.getMenuResult());
+        startActivity(intent);
     }
 
     @Override
