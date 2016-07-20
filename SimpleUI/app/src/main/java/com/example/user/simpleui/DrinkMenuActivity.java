@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,14 +53,22 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
     }
 
     private void setData(){
-        for(int i = 0; i < drinkNames.length; i++){
-            Drink drink = new Drink();
-            drink.setDrinkNmae(drinkNames[i]);
-            drink.setmPrice(mPrices[i]);
-            drink.setlPrice(lPrices[i]);
-            drink.imageId = imageId[i];
-            drinks.add(drink);
-        }
+//        for(int i = 0; i < drinkNames.length; i++){
+//            Drink drink = new Drink();
+//            drink.setDrinkName(drinkNames[i]);
+//            drink.setmPrice(mPrices[i]);
+//            drink.setmPriceetlPrice(lPrices[i]);
+//            drink.imageId = imageId[i];
+//            drinks.add(drink);
+//        }
+
+        Drink.syncDrinksFromRemote(new FindCallback<Drink>() {
+            @Override
+            public void done(List<Drink> objects, ParseException e) {
+                drinks = objects;
+                setUpDrinkMenuListView();
+            }
+        });
     }
 
     private void setUpDrinkMenuListView(){
@@ -77,7 +88,7 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
     public void showDrinkOrderDialog(Drink drink){
         DrinkOrder drinkOrder = new DrinkOrder(drink);
         for(DrinkOrder order : orders){
-            if(order.drink.getDrinkNmae().equals(drink.getDrinkNmae())){
+            if(order.drink.getDrinkName().equals(drink.getDrinkName())){
                 drinkOrder = order;
                 break;
             }
@@ -165,7 +176,7 @@ public class DrinkMenuActivity extends AppCompatActivity implements DrinkOrderDi
     public void onDrinkOrderFinish(DrinkOrder drinkOrder) {
         Boolean flag = false;
         for(int i = 0; i < orders.size(); i++){
-            if(orders.get(i).drink.getDrinkNmae().equals(drinkOrder.drink.getDrinkNmae())){
+            if(orders.get(i).drink.getDrinkName().equals(drinkOrder.drink.getDrinkName())){
                 orders.set(i, drinkOrder);
                 flag = true;
                 break;
