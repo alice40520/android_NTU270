@@ -1,6 +1,8 @@
 package com.example.user.simpleui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.parse.ParseFile;
 
@@ -99,4 +101,19 @@ public class Utils {
         }
         return null;
     }
+
+    public static Bitmap getStaticMap(double[] latlng){
+        String center = String.valueOf(latlng[0]) + "," + String.valueOf(latlng[1]);
+        String staticMapURL = "http:map.google.com/maps/api/staticmap?center=" + center + "=640x480&zoom=17";
+
+        byte[] bytes = Utils.urlToBytes(staticMapURL);
+        if(bytes != null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length); // turns bytes into bitmap
+            return bitmap;
+        }
+        return null;
+    }
+
+
+
 }
