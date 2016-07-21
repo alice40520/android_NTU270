@@ -2,6 +2,7 @@ package com.example.user.simpleui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
-import java.nio.channels.AsynchronousCloseException;
+//import java.nio.channels.AsynchronousCloseException;
 import java.util.List;
+import java.util.logging.Handler;
+
+import static com.google.android.gms.maps.CameraUpdateFactory.*;
+import static com.google.android.gms.maps.GoogleMap.*;
 
 public class OrderDetailActivity extends AppCompatActivity implements GeoCodingTask.GeoCodingResponse {
 
@@ -31,7 +40,7 @@ public class OrderDetailActivity extends AppCompatActivity implements GeoCodingT
 
         Intent intent = getIntent();
         String note = intent.getStringExtra("note");
-        String menuResult = intent.getStringExtra("menuResult");
+        final String menuResult = intent.getStringExtra("menuResult"); // What  does final function as??
         String storeInfo = intent.getStringExtra("storeInfo");
 
         TextView noteTextView = (TextView)findViewById(R.id.noteTextView);
@@ -45,30 +54,39 @@ public class OrderDetailActivity extends AppCompatActivity implements GeoCodingT
         List<String> menuResultList = order.getMenuResultList(menuResult);
 
         String text = "";
-        if(menuResultList != null){
-            for(String menuResults : menuResultList){
+        if(menuResultList != null) {
+            for (String menuResults : menuResultList) {
                 text += menuResults = "\n";
             }
-            menuResultTextView.setText(text);
-
-            MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.mapFragment);
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap map) {
-                    googleMap = map;
-                    (new GeoCodingTask(OrderDetailActivity.this)).execute("台北市大安區羅斯福路四段一號");
-                }
-            });
         }
+        menuResultTextView.setText(text);
+
+        MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                googleMap = map;
+                (new GeoCodingTask(OrderDetailActivity.this)).execute("台北市大安區羅斯福路四段一號");
+            }
+        });
     }
 
     @Override
     public void responseWithGeoCodingResults(LatLng latlng) {
         if(googleMap != null){
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 17);
-            googleMap.animateCamera(cameraUpdate);
-            //googleMap.moveCamera(cameraUpdate) // non-animated map
+            CameraUpdate cameraUpdate = newLatLngZoom(latlng, 17);
+            // googleMap.moveCamera(cameraUpdate);
+            MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("台灣大學").snippet("台北市大安區羅斯福路四段一號");
+            googleMap.addMarker(markerOptions);
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    return false;
+                }
+            });
         }
+
     }
 //    public static class GeoCodingTask extends AsyncTask<String, Void, Bitmap>{
 //
