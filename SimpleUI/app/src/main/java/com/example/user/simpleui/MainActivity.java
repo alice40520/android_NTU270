@@ -86,11 +86,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//HOMEWORK: Set spinner to previously selected value (due 07-21)
+        // TO-DO: debug
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                editor.putInt("spinner", position);
+                editor.commit();
             }
 
             @Override
@@ -98,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //spinner.setSelection();
-
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -123,13 +121,15 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                order order = (order)parent.getAdapter().getItem(position);
+                order order = (order) parent.getAdapter().getItem(position);
                 goToDetail(order);
             }
         });
 
         setUpListView();
         setUpSpinner();
+
+        spinner.setSelection(sharedPreferences.getInt("spinner", 0));
 
         ParseObject parseObject = new ParseObject("Test"); //class name to the parse object
         parseObject.put("foo", "bar");

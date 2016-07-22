@@ -88,7 +88,7 @@ public class Utils {
         try {
             JSONObject jsonObject = new JSONObject(result);
             if(jsonObject.getString("status").equals("OK")){
-                JSONObject location = jsonObject.getJSONArray("result")
+                JSONObject location = jsonObject.getJSONArray("results")
                                                 .getJSONObject(0)
                                                 .getJSONObject("geometry")
                                                 .getJSONObject("location");

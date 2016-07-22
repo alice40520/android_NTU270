@@ -25,7 +25,7 @@ public class GeoCodingTask extends AsyncTask<String, Void, LatLng> {
     @Override
     protected void onPostExecute(LatLng latLng) {
         super.onPostExecute(latLng);
-        if(geoCodingResponseWeakReference.get() != null && latLng != null){
+        if(geoCodingResponseWeakReference.get() != null){
             GeoCodingResponse geoCodingResponse = geoCodingResponseWeakReference.get();
             geoCodingResponse.responseWithGeoCodingResults(latLng);
         }
